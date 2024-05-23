@@ -36,6 +36,9 @@ destroy() {
   _oc delete -f manifests/pod.yaml
 }
 
+client() {
+  podman -r run -it $IMG_REPO /client.sh
+}
 
 usage() {
   grep -E -o "^.*\(\)" $0

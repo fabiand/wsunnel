@@ -1,0 +1,15 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: shs-ws
+  namespace: shs-ws
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: shs-ws
+  tls: null
+  port:
+    targetPort: 80
+  alternateBackends: []
+

@@ -6,6 +6,7 @@ RUN dnf install -y nginx cargo openssl-devel
 RUN cargo install --features=ssl websocat
 ENV PATH="${PATH}:/root/.cargo/bin"
 
-RUN dnf install -y openssh-server
+RUN dnf install -y openssh-server openssh-clients
 ADD contrib/nginx.conf /etc/nginx/nginx.conf
-ADD contrib/main.sh /
+ADD contrib/server.sh /
+ADD contrib/client.sh /

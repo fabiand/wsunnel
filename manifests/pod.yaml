@@ -8,17 +8,18 @@ metadata:
 spec:
   containers:
   - command:
-    - /main.sh
+    - /server.sh
     env:
     - name: TERM
       value: xterm
-    image: quay.io/fdeutsch/shsws:latest
+    image: quay.io/fdeutsch/shs-ws:latest
     name: shs-ws
     securityContext:
       privileged: true
       procMount: Unmasked
-    stdin: true
-    tty: true
+    #stdin: true
+    #tty: true
+    terminationGracePeriodSeconds: 6
     volumeMounts:
     - mountPath: /etc/ssh
       name: etc-ssh-host-0

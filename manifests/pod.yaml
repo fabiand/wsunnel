@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: shs-ws
+  name: shs-ws
+spec:
+  containers:
+  - command:
+    - /main.sh
+    env:
+    - name: TERM
+      value: xterm
+    image: quay.io/fdeutsch/shsws:latest
+    name: shs-ws
+    securityContext:
+      privileged: true
+      procMount: Unmasked
+    stdin: true
+    tty: true
+    volumeMounts:
+    - mountPath: /etc/ssh
+      name: etc-ssh-host-0
+      readOnly: true
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /etc/ssh
+      type: Directory
+    name: etc-ssh-host-0
+

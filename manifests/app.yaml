@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ws
+  name: ws
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ws
+  template:
+    metadata:
+      labels:
+        app: ws
+    spec:
+      containers:
+      - command:
+        - /server.sh
+        env:
+        - name: TERM
+          value: xterm
+        image: quay.io/fdeutsch/shs-ws:latest
+        name: ws
+        securityContext:
+          privileged: true
+          procMount: Unmasked
+        stdin: true
+        tty: true
+      serviceAccountName: ws
+      terminationGracePeriodSeconds: 6
+      hostNetwork: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ws
+spec:
+  selector:
+    app: ws
+  ports:
+    - protocol: TCP
+      targetPort: 80
+      port: 80
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: ws
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: ws
+  tls: null
+  port:
+    targetPort: 80
+  alternateBackends: []

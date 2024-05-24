@@ -15,12 +15,12 @@ _oc() { echo "$ oc $@" ; oc $@ ; }
 qoc() { oc $@ > /dev/null 2>&1; }
 
 apply() {
-  _oc apply -f manifests/pod.yaml
+  _oc apply -f manifests/app.yaml
 }
 
 
 deploy() {
-  local NS=shs-ws
+  local NS=ws
   local SA=$NS
   qoc get project $NS || _oc adm new-project $NS
   _oc project $NS
@@ -33,11 +33,17 @@ deploy() {
 }
 
 destroy() {
-  _oc delete -f manifests/pod.yaml
+  _oc delete -f manifests/app.yaml
+}
+
+server() {
+  podman run --name ws-server -ti --rm -p 8888:80 \
+    $IMG_REPO /server.sh
 }
 
 client() {
-  podman -r run -it $IMG_REPO /client.sh
+  podman run --name ws-client -ti --rm \
+    $IMG_REPO /client.sh $@
 }
 
 usage() {

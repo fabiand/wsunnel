@@ -1,7 +1,10 @@
 #!/usr/bin/bash
 
-nginx
+set -x
 
-/usr/sbin/sshd
+# https://gist.github.com/cfra/752d6e761225fd5bf783b44abe30f707
 
-websocat --binary -E ws-l:127.0.0.1:8022 tcp:127.0.0.1:22
+socat TUN,tun-type=tap,tun-name=tunS,iff-up TCP-LISTEN:1234,bind=127.0.0.1,reuseaddr &
+sleep 1
+ip address add 10.0.42.2/24 dev tunS
+websocat -v --print-ping-rtts --ping-interval 6 --binary -E ws-l:0.0.0.0:80 tcp:127.0.0.1:1234

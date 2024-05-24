@@ -16,6 +16,8 @@ qoc() { oc $@ > /dev/null 2>&1; }
 
 apply() {
   _oc apply -f manifests/app.yaml
+  sleep 1
+  _oc get -o jsonpath="{.status.ingress[0].host}{'\n'}" route ws
 }
 
 

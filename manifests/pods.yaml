@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    k8s.v1.cni.cncf.io/networks: '[
+      {
+        "name": "localnet-l2", 
+        "interface": "l2", 
+        "ips": [
+          "10.0.43.15/24"
+          ] 
+      }
+    ]'
+  name: pod15
+spec:
+  terminationGracePeriod: 0
+  containers:
+  - args:
+    - sleep
+    - inf
+    image: quay.io/fdeutsch/shs-ws:latest
+    name: pause
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    k8s.v1.cni.cncf.io/networks: '[
+      {
+        "name": "localnet-l2", 
+        "interface": "l2", 
+        "ips": [
+          "10.0.43.16/24"
+          ] 
+      }
+    ]'
+  name: pod16
+spec:
+  terminationGracePeriod: 0
+  containers:
+  - args:
+    - sleep
+    - inf
+    image: quay.io/fdeutsch/shs-ws:latest
+    name: pause

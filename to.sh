@@ -15,7 +15,8 @@ _oc() { echo "$ oc $@" ; oc $@ ; }
 qoc() { oc $@ > /dev/null 2>&1; }
 
 apply() {
-  _oc apply -f manifests/app.yaml
+  _oc apply -f manifests/nncp.yaml
+  _oc apply -f manifests/app.yaml -f manifests/pods.yaml
   sleep 1
   _oc get -o jsonpath="{.status.ingress[0].host}{'\n'}" route ws
 }
@@ -35,7 +36,7 @@ deploy() {
 }
 
 destroy() {
-  _oc delete -f manifests/app.yaml
+  _oc delete -f manifests/nncp.yaml -f manifests/app.yaml -f manifests/pods.yaml
 }
 
 server() {

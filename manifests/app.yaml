@@ -14,13 +14,20 @@ spec:
     metadata:
       labels:
         app: ws
+      annotations:
+        xk8s.v1.cni.cncf.io/networks: '[
+          {
+            "name": "localnet-l2", 
+            "interface": "l2",
+            "ips": [
+              "10.0.43.2/24"
+              ]
+          }
+        ]'
     spec:
       containers:
       - command:
         - /server.sh
-        env:
-        - name: TERM
-          value: xterm
         image: quay.io/fdeutsch/shs-ws:latest
         name: ws
         securityContext:
@@ -28,9 +35,9 @@ spec:
           procMount: Unmasked
         stdin: true
         tty: true
-      serviceAccountName: ws
-      terminationGracePeriodSeconds: 6
       hostNetwork: true
+      serviceAccountName: ws
+      terminationGracePeriodSeconds: 2
 ---
 apiVersion: v1
 kind: Service

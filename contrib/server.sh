@@ -7,4 +7,5 @@ set -x
 socat TUN,tun-type=tap,tun-name=tunS,iff-up TCP-LISTEN:1234,bind=127.0.0.1,reuseaddr &
 sleep 1
 ip address add 10.0.42.2/24 dev tunS
+ip link set tunS up
 websocat -v --print-ping-rtts --ping-interval 6 --binary -E ws-l:0.0.0.0:80 tcp:127.0.0.1:1234

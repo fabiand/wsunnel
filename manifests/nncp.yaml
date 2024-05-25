@@ -1,0 +1,44 @@
+# https://docs.openshift.com/container-platform/4.15/virt/vm_networking/virt-connecting-vm-to-ovn-secondary-network.html#virt-creating-localnet-nad-cli_virt-connecting-vm-to-ovn-secondary-network
+# https://docs.openshift.com/container-platform/4.15/networking/multiple_networks/attaching-pod.html
+# https://docs.openshift.com/container-platform/4.15/networking/multiple_networks/configuring-additional-network.html#configuration-ovnk-additional-networks_configuring-additional-network
+# https://docs.openshift.com/container-platform/4.15/networking/multiple_networks/configuring-additional-network.html#configuring-additional-network_ovn-kubernetes-configuration-for-a-localnet-topology
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: ovs-vpn-br
+spec:
+  nodeSelector:
+    node-role.kubernetes.io/worker: ''
+  desiredState:
+    interfaces:
+    - name: ovs-vpn-br
+      description: |-
+        A dedicated OVS bridge with eth1 as a port
+        allowing all VLANs and untagged traffic
+      type: ovs-bridge
+      state: up
+      bridge:
+        options:
+          stp: true
+        port: []  # No phy ifs attached, manually attach
+    ovn:
+      bridge-mappings:
+      - localnet: localnet-l2
+        bridge: ovs-vpn-br
+        state: present
+---
+# https://docs.openshift.com/container-platform/4.15/virt/vm_networking/virt-connecting-vm-to-ovn-secondary-network.html#virt-creating-localnet-nad-cli_virt-connecting-vm-to-ovn-secondary-network
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: localnet-l2
+spec:
+  config: |2
+    {
+            "cniVersion": "0.3.1",
+            "name": "localnet-l2",
+            "type": "ovn-k8s-cni-overlay",
+            "topology": "localnet",
+            "x-subnets": "10.0.43.0/24",
+            "netAttachDefName": "ws/localnet-l2"
+    }

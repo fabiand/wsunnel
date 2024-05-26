@@ -3,17 +3,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: ws
-  name: ws
+    app: wsunnel
+  name: wsunnel
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ws
+      app: wsunnel
   template:
     metadata:
       labels:
-        app: ws
+        app: wsunnel
       annotations:
         xk8s.v1.cni.cncf.io/networks: '[
           {
@@ -28,24 +28,24 @@ spec:
       containers:
       - command:
         - /server.sh
-        image: quay.io/fdeutsch/shs-ws:latest
-        name: ws
+        image: quay.io/fdeutsch/wsunnel:latest
+        name: wsunnel
         securityContext:
           privileged: true
           procMount: Unmasked
         stdin: true
         tty: true
       hostNetwork: true
-      serviceAccountName: ws
+      serviceAccountName: wsunnel
       terminationGracePeriodSeconds: 2
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ws
+  name: wsunnel
 spec:
   selector:
-    app: ws
+    app: wsunnel
   ports:
     - protocol: TCP
       targetPort: 80
@@ -54,12 +54,12 @@ spec:
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: ws
+  name: wsunnel
   labels: {}
 spec:
   to:
     kind: Service
-    name: ws
+    name: wsunnel
   tls: null
   port:
     targetPort: 80

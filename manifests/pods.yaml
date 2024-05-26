@@ -18,8 +18,8 @@ spec:
   - args:
     - sleep
     - inf
-    image: quay.io/fdeutsch/shs-ws:latest
-    name: pause
+    image: quay.io/fdeutsch/wsunnel:latest
+    name: sleep
 ---
 apiVersion: v1
 kind: Pod
@@ -41,5 +41,5 @@ spec:
   - args:
     - sleep
     - inf
-    image: quay.io/fdeutsch/shs-ws:latest
-    name: pause
+    image: quay.io/fdeutsch/wsunnel:latest
+    name: sleep

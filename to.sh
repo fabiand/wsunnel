@@ -1,4 +1,4 @@
-IMG_REPO=quay.io/fdeutsch/shs-ws
+IMG_REPO=quay.io/fdeutsch/wsunnel
 
 build() {
   podman -r build -t $IMG_REPO -f Containerfile .
@@ -18,12 +18,12 @@ apply() {
   _oc apply -f manifests/nncp.yaml
   _oc apply -f manifests/app.yaml -f manifests/pods.yaml
   sleep 1
-  _oc get -o jsonpath="{.status.ingress[0].host}{'\n'}" route ws
+  _oc get -o jsonpath="{.status.ingress[0].host}{'\n'}" route wsunnel
 }
 
 
 deploy() {
-  local NS=ws
+  local NS=wsunnel
   local SA=$NS
   qoc get project $NS || _oc adm new-project $NS
   _oc project $NS
@@ -40,12 +40,12 @@ destroy() {
 }
 
 server() {
-  podman run --name ws-server -ti --rm -p 8888:80 \
+  podman run --name wsunnel-server -ti --rm -p 8888:80 \
     $IMG_REPO /server.sh
 }
 
 client() {
-  podman run --name ws-client -ti --rm \
+  podman run --name wsunnel-client -ti --rm \
     $IMG_REPO /client.sh $@
 }
 

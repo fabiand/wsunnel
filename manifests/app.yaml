@@ -15,7 +15,7 @@ spec:
       labels:
         app: wsunnel
       annotations:
-        xk8s.v1.cni.cncf.io/networks: '[
+        k8s.v1.cni.cncf.io/networks: '[
           {
             "name": "localnet-l2", 
             "interface": "l2",
@@ -35,7 +35,7 @@ spec:
           procMount: Unmasked
         stdin: true
         tty: true
-      hostNetwork: true
+      #hostNetwork: true
       serviceAccountName: wsunnel
       terminationGracePeriodSeconds: 2
 ---

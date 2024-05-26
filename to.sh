@@ -16,7 +16,9 @@ qoc() { oc $@ > /dev/null 2>&1; }
 
 apply() {
   _oc apply -f manifests/nncp.yaml
-  _oc apply -f manifests/app.yaml -f manifests/pods.yaml
+  sleep 2
+  _oc apply -f manifests/app.yaml
+  _oc apply -f manifests/pods.yaml
   sleep 1
   _oc get -o jsonpath="{.status.ingress[0].host}{'\n'}" route wsunnel
 }
@@ -45,8 +47,10 @@ server() {
 }
 
 client() {
-  podman run --name wsunnel-client -ti --rm \
-    $IMG_REPO /client.sh $@
+  ENDPOINT=$(oc get -o jsonpath="{.status.ingress[0].host}{'\n'}" route wsunnel)
+
+  podman -r run --name wsunnel-client --privileged --network pasta -ti --rm \
+    $IMG_REPO bash -x client.sh $ENDPOINT "$@"
 }
 
 usage() {

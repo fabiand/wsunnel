@@ -40,5 +40,5 @@ spec:
             "type": "ovn-k8s-cni-overlay",
             "topology": "localnet",
             "x-subnets": "10.0.43.0/24",
-            "netAttachDefName": "ws/localnet-l2"
+            "netAttachDefName": "wsunnel/localnet-l2"
     }
